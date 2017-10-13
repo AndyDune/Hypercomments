@@ -14,7 +14,11 @@
 
 namespace AndyDune\Hypercomments;
 
+use AndyDune\Hypercomments\Comments\CommentsList;
 
+/**
+ * @method CommentsList list()
+ */
 class Comments
 {
     /**
@@ -22,9 +26,22 @@ class Comments
      */
     protected $api;
 
+    protected $channels = [
+        'list' => CommentsList::class
+    ];
+
+
     public function __construct(Api $api)
     {
         $this->api = $api;
+    }
+
+    public function __call($name, $arguments)
+    {
+        if (!isset($this->channels[$name])) {
+            throw new Exception('Operator is not exist. May be yet.');
+        }
+        return new $this->channels[$name]($this);
     }
 
     /**

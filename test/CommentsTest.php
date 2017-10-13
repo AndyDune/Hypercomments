@@ -11,8 +11,25 @@
  *
  */
 namespace AndyDune\HypercommentsTest;
+use AndyDune\Hypercomments\Api;
+use AndyDune\Hypercomments\Comments\CommentsList;
+use PHPUnit\Framework\TestCase;
 
-class CommentsTest
+class CommentsTest extends TestCase
 {
+    public function testDescription()
+    {
+        $secret = '';
+        $id = 96557;
+        $query = new Api($id, $secret);
+        $list = $query->comments()->list();
+        $list->setLink('http://hypercomments.rznw.ru/comments/');
+        $this->assertInstanceOf(CommentsList::class, $list);
+
+        $data = $list->get();
+        $this->assertTrue(is_array($data));
+        $this->assertArrayHasKey('result', $data);
+        $this->assertArrayHasKey('data', $data);
+    }
 
 }

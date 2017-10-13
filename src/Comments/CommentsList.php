@@ -9,11 +9,79 @@
  *
  */
 
-
 namespace AndyDune\Hypercomments\Comments;
 
-
-class CommentsList
+class CommentsList extends CommentsAbstract
 {
+    protected $link;
+    protected $sort = 'all';
+    protected $limit = 20;
+    protected $offset = 0;
+    protected $xId = null;
+
+    /**
+     * @param int $limit
+     */
+    public function setLimit($limit)
+    {
+        $this->limit = $limit;
+        return $this;
+    }
+
+    /**
+     * @param mixed $link
+     */
+    public function setLink($link)
+    {
+        $this->link = $link;
+        return $this;
+    }
+
+    /**
+     * @param int $offset
+     */
+    public function setOffset($offset)
+    {
+        $this->offset = $offset;
+        return $this;
+    }
+
+    public function setSortAll()
+    {
+        $this->sort = 'all';
+        return $this;
+    }
+
+    public function setSortNew()
+    {
+        $this->sort = 'new';
+        return $this;
+    }
+
+    public function setSortPopular()
+    {
+        $this->sort = 'popular';
+        return $this;
+    }
+
+    public function setXId($id)
+    {
+        $this->xId = $id;
+        return $this;
+    }
+
+    public function get()
+    {
+        $body = [
+            'link' => $this->link,
+            'sort' => $this->sort,
+            'limit' => $this->limit,
+            'offset' => $this->offset,
+        ];
+        if ($this->xId) {
+            $body['xid'] = $this->xId;
+        }
+        return $this->getCommentsContainer()->getApi()->executeRequest($body);
+    }
 
 }
