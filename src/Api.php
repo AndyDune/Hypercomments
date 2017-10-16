@@ -70,28 +70,49 @@ class Api
         return sha1($body . $this->secretKey);
     }
 
+    /**
+     * @param $body
+     * @return Result
+     */
     public function executeRequest($body)
     {
-        $body['widget_id'] = $this->getWidgetId();
+        $resultToReturn = new Result();
+        try {
+            $body['widget_id'] = $this->getWidgetId();
 
-        $client = new Client([
-            'timeout'  => 2.0,
-        ]);
-        $body = \GuzzleHttp\json_encode($body);
-        $url = $this->getUrl();
-        $response = $client->request('POST', $url, [
-            'form_params' => [
-                'body' => $body,
-                'signature' => $this->buildSignature($body),
-            ]
-        ]);
+            $client = new Client([
+                'timeout' => 2.0,
+            ]);
+            $body = \GuzzleHttp\json_encode($body);
+            $url = $this->getUrl();
+            $response = $client->request('POST', $url, [
+                'form_params' => [
+                    'body' => $body,
+                    'signature' => $this->buildSignature($body),
+                ]
+            ]);
 
-        if ($response->getStatusCode() == '200') {
-            $body = $response->getBody();
-            $resultString = $body->getContents();
-            $array = \GuzzleHttp\json_decode($resultString, true);
-            return $array;
+            if ($response->getStatusCode() == '200') {
+                $body = $response->getBody();
+                $resultString = $body->getContents();
+                $array = \GuzzleHttp\json_decode($resultString, true);
+                $result = $array['result'] ?? false;
+                if (!$result) {
+                    throw new Exception('BAD_DATA_RETURNED');
+                }
+
+                if ($result == 'error') {
+                    throw new Exception($array['code'] ?? $array['description'] ?? 'error_from_hyper');
+                }
+
+                $resultToReturn->setSuccess(true);
+                $resultToReturn->setData($array['data'] ?? []);
+            } else {
+                $resultToReturn->setError('Bad response status code');
+            }
+        } catch (Exception $e) {
+            $resultToReturn->setError($e->getMessage());
         }
-        return null;
+        return $resultToReturn;
     }
 }
