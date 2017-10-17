@@ -25,3 +25,6 @@ $this->assertArrayHasKey('result', $data);
 $this->assertArrayHasKey('data', $data);
 
 ```
+
+
+__Please, contact me if you need more from this library.__
