@@ -81,7 +81,18 @@ class CommentsList extends CommentsAbstract
         if ($this->xId) {
             $body['xid'] = $this->xId;
         }
-        return $this->getCommentsContainer()->getApi()->executeRequest($body);
+        $result =  $this->getCommentsContainer()->getApi()->executeRequest($body);
+        if ($result->isSuccess()) {
+            $data = $result->getData();
+            if (!$data) {
+                return $result;
+            }
+            $data = array_map(function ($value) {
+                return new CommentsRecord($value);
+            }, $data);
+            $result->setData($data);
+        }
+        return $result;
     }
 
 }
