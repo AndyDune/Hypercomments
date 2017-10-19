@@ -1,6 +1,9 @@
 # Hypercomments
 Hypercomments API 
 
+[![Packagist Version](https://img.shields.io/packagist/v/andydune/hypercomments.svg?style=flat-square)](https://packagist.org/packages/andydune/hypercomments)
+[![Total Downloads](https://img.shields.io/packagist/dt/andydune/hypercomments.svg?style=flat-square)](https://packagist.org/packages/andydune/hypercomments)
+
 
 ## Usage
 
@@ -22,3 +25,6 @@ $this->assertArrayHasKey('result', $data);
 $this->assertArrayHasKey('data', $data);
 
 ```
+
+
+__Please, contact me if you need more from this library.__
