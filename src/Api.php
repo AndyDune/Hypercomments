@@ -14,6 +14,7 @@
 
 namespace AndyDune\Hypercomments;
 use GuzzleHttp\Client;
+use Exception as ExceptionBase;
 /**
  * @method Comments comments()
  */
@@ -110,7 +111,7 @@ class Api
             } else {
                 $resultToReturn->setError('Bad response status code');
             }
-        } catch (Exception $e) {
+        } catch (ExceptionBase $e) {
             $resultToReturn->setError($e->getMessage());
         }
         return $resultToReturn;
